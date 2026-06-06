@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Get version from release tag
+        id: version
+        shell: pwsh
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          $version = $env:TAG.TrimStart('v')
+          "VERSION=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Publish screensaver
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: dotnet publish MatrixScreensaver/MatrixScreensaver.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true "-p:Version=$env:VERSION" -o ./publish
+
+      - name: Rename to .scr
+        shell: pwsh
+        run: Move-Item -Path ./publish/MatrixScreensaver.exe -Destination ./publish/MatrixScreensaver.scr
+
+      - name: Upload release asset
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload $env:TAG ./publish/MatrixScreensaver.scr --clobber

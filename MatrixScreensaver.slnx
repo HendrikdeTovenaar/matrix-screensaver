@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="MatrixScreensaver/MatrixScreensaver.csproj" />
+</Solution>

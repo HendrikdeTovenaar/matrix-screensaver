@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>MatrixScreensaver</AssemblyName>
+    <RootNamespace>MatrixScreensaver</RootNamespace>
+    <!-- Publish as single self-contained executable; rename the output to .scr -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- SkiaSharp core rendering library -->
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <!-- SkiaSharp WinForms view (SKControl) -->
+    <!-- Native SkiaSharp binaries for Windows x64 -->
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.4" />
+  </ItemGroup>
+
+</Project>
