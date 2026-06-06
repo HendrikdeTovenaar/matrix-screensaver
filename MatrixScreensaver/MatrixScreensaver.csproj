@@ -12,9 +12,25 @@
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSingleFilePublish>true</IncludeNativeLibrariesForSingleFilePublish>
+    <IncludeWindowsSDKRefFrameworkReferences>false</IncludeWindowsSDKRefFrameworkReferences>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- No PDB files in release builds for our own assembly -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <!-- Delete the native PDB shipped by SkiaSharp.NativeAssets.Win32 (~80 MB, debug symbols,
+       not needed at runtime). Must run AfterTargets="Publish" because the file is written to
+       the publish dir by a NuGet native-copy pipeline that bypasses _ResolvedFileToPublish. -->
+  <Target Name="RemoveNativePdbs" AfterTargets="Publish">
+    <ItemGroup>
+      <_NativePdbs Include="$(PublishDir)*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(_NativePdbs)" />
+  </Target>
 
   <ItemGroup>
     <!-- SkiaSharp core rendering library -->
